@@ -201,6 +201,7 @@ jobs:
       - name: Set env vars *nix
         if: runner.os != 'Windows'
         run: |
+          uname -m;
           if [[ ${{ matrix.impl }} == cpython ]] ; then
             echo "LMDB_FORCE_CPYTHON=1" >> $GITHUB_ENV;
           else
@@ -215,6 +216,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          uname -m
           echo "Linux: Envs are cpython=$LMDB_FORCE_CPYTHON
             cffi=$LMDB_FORCE_CFFI pure=$LMDB_PURE system=$LMDB_FORCE_SYSTEM"
           echo "Windows: Envs are cpython=$Env:LMDB_FORCE_CPYTHON
@@ -225,18 +227,13 @@ jobs:
           python -m pip install flake8 pytest patch-ng
           python setup.py develop sdist bdist_wheel
           ls dist
-      # name: Lint with flake8
-      # run: |
-      #   # stop the build if there are Python syntax errors or undefined names
-      #   flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-      #   # exit-zero treats all errors as warnings.
-      #   flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
-      #
+     
       - name: Test with pytest
         # Limit the test cycle a little
         if: matrix.python-version != '3.4' && matrix.python-version != '3.6' &&
             matrix.python-version != '3.8'
         run: |
+          uname -m
           echo "Envs are cpython=$LMDB_FORCE_CPYTHON cffi=$LMDB_FORCE_CFFI
             pure=$LMDB_PURE system=$LMDB_FORCE_SYSTEM"
           pytest
